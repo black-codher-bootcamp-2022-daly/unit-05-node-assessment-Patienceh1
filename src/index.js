@@ -19,10 +19,9 @@ app.use(bodyParser.json());
 app.use("/content", express.static(path.join(__dirname, "public")));
 
 app.get("/", (_, res) => {
-  /*
+  
   res.sendFile("./public/index.html", { root: __dirname });
-  */
-  res.status(501).end();
+ 
 });
 
 app.get('/todos', (_, res) => {
