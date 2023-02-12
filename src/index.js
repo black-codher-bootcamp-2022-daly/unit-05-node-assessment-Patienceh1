@@ -19,11 +19,11 @@ app.get("/", (_, res) => {
 });
 
 app.get("/todos", (_, res) => {
-  /*
+  
   res.header("Content-Type","application/json");
-  res.sendFile(todoFilePath, { root: __dirname });
-  */
-  res.status(501).end();
+  res.sendFile(todoFilePath, { root: __dirname, BASE_JSON_PATH:"/models/todos.json" });
+
+  // res.status(501).end();
 });
 
 //Add GET request with path '/todos/overdue'
