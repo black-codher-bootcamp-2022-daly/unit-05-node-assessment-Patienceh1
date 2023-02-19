@@ -6,6 +6,7 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const { v4: uuidv4 } = require("uuid");
 const todoFilePath = process.env.BASE_JSON_PATH;
+// const data = require(".todos.json");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -19,20 +20,29 @@ app.get("/", (_, res) => {
 });
 
 app.get("/todos", (_, res) => {
-  
-  res.header("Content-Type","application/json");
-  res.sendFile(todoFilePath, { root: __dirname, BASE_JSON_PATH:"/models/todos.json" });
-
+  res.header("Content-Type", "application/json");
+  res.sendFile(path.join(__dirname, "/models/todos.json"));
   // res.status(501).end();
 });
 
 //Add GET request with path '/todos/overdue'
+app.get("/todos", (_, res) => {
+  res.header("Content-Type", "application/json");
+  res.sendFile(path.join(__dirname, "/models/todos.json"));
+
+  // res.status(501).end();
+});
 
 //Add GET request with path '/todos/completed'
 
 //Add POST request with path '/todos'
 
 //Add PATCH request with path '/todos/:id
+app.get("/models/todos.json"), (req, res) => {
+  console.log('Models:', res.locals)
+  const file = "/models/todos.json";
+  const id = JSON.parse(req.params.id);}
+  
 
 //Add POST request with path '/todos/:id/complete
 
