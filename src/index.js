@@ -6,11 +6,9 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const { v4: uuidv4 } = require("uuid");
 const todoFilePath = process.env.BASE_JSON_PATH;
-const data = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "models/todos.json"))
+const getData = () => JSON.parse(
+  fs.readFileSync(path.join(__dirname, todoFilePath))
 );
-// const todos = require("/models/todos.js");
-// const data = require(".todos.json");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -24,17 +22,21 @@ app.get("/", (_, res) => {
 
 app.get("/todos", (_, res) => {
   res.header("Content-Type", "application/json");
-  const data = res.sendFile(todoFilePath, { root: __dirname });
+  res.sendFile(todoFilePath, { root: __dirname });
   // res.status(501).end();
 });
 
 //Add GET request with path '/todos/overdue'
 
-// app.get("/todos", (req, res) => {
-//   res.header("Content-Type", "application/json");
-//   res.sendFile(path.join(__dirname, "../models/todos.json"));
-//   // res.status(501).end();
-// });
+app.get("/todos/overdue", (req, res) => {
+  res.header("Content-Type", "application/json");
+  // get todos
+ let todos = getData()
+  //filter todos that are incomplete and the due date has passed
+  .filter((todo) => !todo.completed && Date.parse(todo.due) < new Date() )
+  // return filtered todos
+   res.send(todos);
+});
 
 //Add GET request with path '/todos/completed'
 
@@ -44,7 +46,7 @@ app.get("/todos", (_, res) => {
 
 app.get("/todos/:id", (req, res) => {
   res.header("Content-Type", "application/json");
-  const getId = data.find((element) => element.id === req.params.id);
+  const getId = getData().find((element) => element.id === req.params.id);
   console.log(getId);
   res.status(200).send(getId);
 
