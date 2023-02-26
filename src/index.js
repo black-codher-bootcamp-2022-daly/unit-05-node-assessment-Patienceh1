@@ -16,6 +16,16 @@ app.use(express.raw());
 app.use(bodyParser.json());
 app.use("/content", express.static(path.join(__dirname, "public")));
 
+// const statusCode = (goodStatus, badStatus, res) => {
+//   fs.readFileSync(path.join(__dirname, todoFilePath)), JSON.stringify(getData), (err) =>{
+//   if (err) {
+//     res.status(badStatus).send("Sorry cannot find data");
+//   } else {
+//     res.status(goodStatus).send("Data has been found");
+//   }
+
+// }};
+
 app.get("/", (_, res) => {
   res.sendFile("./public/index.html", { root: __dirname });
 });
@@ -33,13 +43,19 @@ app.get("/todos/overdue", (req, res) => {
   // get todos
  let todos = getData()
   //filter todos that are incomplete and the due date has passed
-  .filter((todo) => !todo.completed && Date.parse(todo.due) < new Date() )
+  .filter((todo) => !todo.completed && Date.parse(todo.due) < new Date())
   // return filtered todos
    res.send(todos);
 });
 
 //Add GET request with path '/todos/completed'
+app.get("/todos/completed", (req, res) => {
+  res.header("Content-Type", "application/json");
+let todos = getData().filter((todo) => todo.completed)
+res.send(todos);
 
+
+});
 //Add POST request with path '/todos'
 
 //Add PATCH request with path '/todos/:id
@@ -48,7 +64,11 @@ app.get("/todos/:id", (req, res) => {
   res.header("Content-Type", "application/json");
   const getId = getData().find((element) => element.id === req.params.id);
   console.log(getId);
-  res.status(200).send(getId);
+  if (!getId) {
+    res.status(404).send("Sorry Id not found")
+  } else {
+  res.send(getId).status(200);
+}
 
 
 });
@@ -65,5 +85,7 @@ app.get("/todos/:id", (req, res) => {
 //Add POST request with path '/todos/:id/undo
 
 //Add DELETE request with path '/todos/:id
+
+
 
 module.exports = app;
