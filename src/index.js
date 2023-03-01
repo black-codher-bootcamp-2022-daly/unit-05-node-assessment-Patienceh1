@@ -79,7 +79,7 @@ app.post("/todos", (req, res) => {
 
     if (err) {
 
-      res.send("Unsuccessful request");
+      res.send("Unsuccessful request").status(201);
 
     } else {
 
@@ -133,8 +133,54 @@ const reqDue = req.body.due;
 
 
 //Add POST request with path '/todos/:id/complete
+app.post("/todos/:id/complete", (req,res) => {
+const todos = getData();
+const id = req.params.id;
+
+const getElement = todos.find((todos) => todos.id === id)
+if (getElement) {
+  getData.completed = true;
+}
+
+ fs.writeFile((path.join(__dirname, "models/todos.json")), JSON.stringify(todos), (err) => {
+
+          if (err) {
+      
+            res.send("Unsuccessful request");
+      
+          } else {
+      
+            res.send("Successful request");
+          }
+      
+        });
+
+})
+
 
 //Add POST request with path '/todos/:id/undo
+app.post("/todos/:id/undo", (req, res) => {
+  const todos = getData();
+  const id = req.params.id;
+
+  const getElement = todos.find((todos) => todos.id === id)
+  if (getElement) {
+    getData.completed = false;
+  }
+  fs.writeFile((path.join(__dirname, "models/todos.json")), JSON.stringify(todos), (err) => {
+
+    if (err) {
+
+      res.send("Unsuccessful request");
+
+    } else {
+
+      res.send("Successful request");
+    }
+
+  });
+
+})
 
 //Add DELETE request with path '/todos/:id
 
