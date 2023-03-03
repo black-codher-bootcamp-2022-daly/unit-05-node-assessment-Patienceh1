@@ -131,21 +131,36 @@ app.post("/todos/:id/complete", (req, res) => {
 
   const getElement = todos.find((todos) => todos.id === id);
   if (getElement) {
-    getData.completed = true;
+    getElement.completed = true;
+    console.log(getElement);
+    fs.writeFile(
+      __dirname + todoFilePath,
+      JSON.stringify(todos, null, 2),
+      (err) => {
+        if (err) {
+          throw err;
+        } else {
+          res.send(`User with the id ${id} is now complete.`).status(200);
+        }
+      }
+    );
+  } else {
+    res.status(404).send("Could not fulfil request");
+  }
   }
 
-  fs.writeFile(
-    path.join(__dirname, todoFilePath),
-    JSON.stringify(todos),
-    (err) => {
-      if (getElement) {
-        res.send("Successful request").status(200);
-      } else {
-        res.send("Unsuccessful request").status(404);
-      }
-    }
-  );
-});
+  // fs.writeFile(
+  //   path.join(__dirname, todoFilePath),
+  //   JSON.stringify(todos),
+  //   (err) => {
+  //     if (getElement) {
+  //       res.send("Successful request").status(200);
+  //     } else {
+  //       res.send("Unsuccessful request").status(404);
+  //     }
+  //   }
+  // );
+);
 
 //Add POST request with path '/todos/:id/undo
 app.post("/todos/:id/undo", (req, res) => {
