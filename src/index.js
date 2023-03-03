@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const { v4: uuidv4 } = require("uuid");
 const todoFilePath = process.env.BASE_JSON_PATH;
 const getData = () =>
-  JSON.parse(fs.readFileSync(path.join(__dirname, todoFilePath)));
+  JSON.parse(fs.readFileSync(path.join(__dirname + todoFilePath)));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use("/content", express.static(path.join(__dirname, "public")));
 
 const statusCode = (goodStatus, badStatus, res) => {
-  fs.readFileSync(path.join(__dirname, todoFilePath)),
+  fs.readFileSync(path.join(__dirname + todoFilePath)),
     JSON.stringify(getData),
     (err) => {
       if (err) {
@@ -26,7 +26,6 @@ const statusCode = (goodStatus, badStatus, res) => {
       }
     };
 };
-
 
 app.get("/", (_, res) => {
   res.sendFile("./public/index.html", { root: __dirname });
@@ -58,13 +57,13 @@ app.get("/todos/completed", (req, res) => {
 //Add GET request with path '/todos/:id
 
 app.get("/todos/:id", (req, res) => {
-  res.header("Content-Type", "application/json");
   const getId = getData().find((element) => element.id === req.params.id);
-  console.log(getId);
-  if (!getId) {
-    res.status(404).send("Sorry Id not found");
+  if (getId) {
+    res.send(
+      JSON.stringify(
+        getData().find((element) => element.id == req.params.id), null, 2) );
   } else {
-    res.send(getId).status(200);
+    res.status(404).send("Sorry Id not found");
   }
 });
 
@@ -74,114 +73,145 @@ app.post("/todos", (req, res) => {
   const body = req.body;
   todos.push(body);
   console.log(todos);
-
-  fs.writeFile((path.join(__dirname, "models/todos.json")), JSON.stringify(todos), (err) => {
-
-    if (err) {
-
-      res.send("Unsuccessful request").status(201);
-
-    } else {
-
-      res.send("Successful request");
-    }
-
-  });
-
-
-
-  // const { name, due } = req.body;
-  // const id = uuidv4();
-  // const dateTime = new Date();
-
-  // if (req.body && new Date(due) != "invalid date") {
-  //   const newTodo = { id, name, created: dateTime, due, complete: false };
-  //   console.log(newTodo);
-
-  //   todos.push(newTodo);
+  // if (todos) {
+  //   res.status(201).send("New Id Created");
+  // } else {
+  //   res.status(404).send("Sorry Id not found");
   // }
 
-  //  res.status(201).json(newTodo);
-  // log(req.method, todos);
-  //  statusCode(res, 404, 201);
-});
+  fs.writeFile(
+    path.join(__dirname, "models/todos.json"),
+    JSON.stringify(todos),
+    (err) => {
+      if (todos) {
+        res.send("New Id Created").status(201);
+      } else {
+        res.send("Unsuccessful request").status(400);
+      }
+})}
+);
+
+// const { name, due } = req.body;
+// const id = uuidv4();
+// const dateTime = new Date();
+
+// if (req.body && new Date(due) != "invalid date") {
+//   const newTodo = { id, name, created: dateTime, due, complete: false };
+//   console.log(newTodo);
+
+//   todos.push(newTodo);
+// }
+
+//  res.status(201).json(newTodo);
+// log(req.method, todos);
+//  statusCode(res, 404, 201);
 
 //Add PATCH request with path '/todos/:id
-app.patch("/todos/:id", (req,res) => {
-const todos = getData() 
-const reqName = req.body.name;
-const reqId = req.params.id;
-const reqDue = req.body.due;
+app.patch("/todos/:id", (req, res) => {
+  const todos = getData();
+  const reqName = req.body.name;
+  const reqId = req.params.id;
+  const reqDue = req.body.due;
 
-  const todo = todos.find((element) => element.id === reqId)  
-        if (reqDue) {todo.due = reqDue} 
-        if (reqName) {todo.name = reqName};     
-        
-        fs.writeFile((path.join(__dirname, "models/todos.json")), JSON.stringify(todos), (err) => {
+  const todo = todos.find((element) => element.id === reqId);
+  if (reqDue) {
+    todo.due = reqDue;
+  }
+  if (reqName) {
+    todo.name = reqName;
+  }
 
-          if (err) {
-      
-            res.send("Unsuccessful request");
-      
-          } else {
-      
-            res.send("Successful request");
-          }
-      
-        });
-      })
-
+  fs.writeFile(
+    path.join(__dirname, "models/todos.json"),
+    JSON.stringify(todos),
+    (err) => {
+      if (err) {
+        res.send("Unsuccessful request");
+      } else {
+        res.send("Successful request");
+      }
+    }
+  );
+});
 
 //Add POST request with path '/todos/:id/complete
-app.post("/todos/:id/complete", (req,res) => {
-const todos = getData();
-const id = req.params.id;
+app.post("/todos/:id/complete", (req, res) => {
+  const todos = getData();
+  const id = req.params.id;
 
-const getElement = todos.find((todos) => todos.id === id)
-if (getElement) {
-  getData.completed = true;
-}
+  const getElement = todos.find((todos) => todos.id === id);
+  if (getElement) {
+    getData.completed = true;
+  }
 
- fs.writeFile((path.join(__dirname, "models/todos.json")), JSON.stringify(todos), (err) => {
-
-          if (err) {
-      
-            res.send("Unsuccessful request");
-      
-          } else {
-      
-            res.send("Successful request");
-          }
-      
-        });
-
-})
-
+  fs.writeFile(
+    path.join(__dirname,todoFilePath),
+    JSON.stringify(todos),
+    (err) => {
+      if (getElement) {
+        res.send("Successful request").status(200);
+      } else {
+        res.send("Unsuccessful request").status(404);
+      }
+    }
+  );
+});
 
 //Add POST request with path '/todos/:id/undo
 app.post("/todos/:id/undo", (req, res) => {
   const todos = getData();
   const id = req.params.id;
 
-  const getElement = todos.find((todos) => todos.id === id)
+  const getElement = todos.find((todos) => todos.id === id);
   if (getElement) {
     getData.completed = false;
   }
-  fs.writeFile((path.join(__dirname, "models/todos.json")), JSON.stringify(todos), (err) => {
-
-    if (err) {
-
-      res.send("Unsuccessful request");
-
-    } else {
-
-      res.send("Successful request");
+  fs.writeFile(
+    path.join(__dirname, "models/todos.json"),
+    JSON.stringify(todos),
+    (err) => {
+      if (err) {
+        res.send("Unsuccessful request");
+      } else {
+        res.send("Successful request");
+      }
     }
-
-  });
-
-})
+  );
+});
 
 //Add DELETE request with path '/todos/:id
+app.delete("/todos/:id", (req, res) => {
+  // res.header("Content-Type", "application/json");
+  let todos = getData();
+  const id = req.params.id;
+
+  const removeTodo = todos.find((todo) => todo.id == id);
+  console.log(removeTodo);
+  if (removeTodo) {
+    todos = todos.filter((todo) => todo.id != id);
+    fs.writeFile(__dirname + todoFilePath, JSON.stringify(todos, null, 2), (err) => {
+      if (err) {
+        throw err;
+      }
+      else{
+        res.send(`User with the id ${id} deleted.`).status(200);
+      }
+    });
+  } else {
+    res.status(404).send("Could not fulfil request");
+  }
+
+  
+  // fs.writeFile(
+  //   path.join(__dirname, todoFilePath),JSON.stringify(todos),
+  //   (err) => {
+  //     if (removeTodo) {
+  //       res.send(`User with the id ${id} deleted.`).status(200);
+  //     } else {
+  //       res.send("Sorry Unsucessful").status(404);
+  //     }
+  //   }
+  // );
+});
 
 module.exports = app;
