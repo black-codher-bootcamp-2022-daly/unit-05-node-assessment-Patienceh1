@@ -8,6 +8,7 @@ const { v4: uuidv4 } = require("uuid");
 const todoFilePath = process.env.BASE_JSON_PATH;
 const getData = () =>
   JSON.parse(fs.readFileSync(path.join(__dirname + todoFilePath)));
+  // console.log(getData());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -113,13 +114,12 @@ app.patch("/todos/:id", (req, res) => {
   console.log(todo);
 
   fs.writeFile(
-    path.join(__dirname, "models/todos.json"),
-    JSON.stringify(todos),
+    path.join(__dirname + todoFilePath),JSON.stringify(todos, null, 2),
     (err) => {
       if (err) {
-        res.send("Unsuccessful request");
+        throw err
       } else {
-        res.send("Successful request");
+        res.status(200).send(`User has been amended!`).end();
       }
     }
   );
