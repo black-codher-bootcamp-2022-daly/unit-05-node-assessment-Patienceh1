@@ -81,7 +81,7 @@ app.post("/todos", (req, res) => {
   const dateTime = new Date();
 
   if (req.body && new Date(due) != "invalid date") {
-    const newTodo = { id, name, complete: false, due, created: dateTime };
+    const newTodo = { id, name, completed: false, due, created: dateTime };
     console.log(newTodo);
     todos.push(newTodo);
     todos = JSON.stringify(todos, null, 2);
