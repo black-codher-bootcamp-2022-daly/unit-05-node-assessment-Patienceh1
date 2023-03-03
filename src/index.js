@@ -148,18 +148,6 @@ app.post("/todos/:id/complete", (req, res) => {
     res.status(404).send("Could not fulfil request");
   }
   }
-
-  // fs.writeFile(
-  //   path.join(__dirname, todoFilePath),
-  //   JSON.stringify(todos),
-  //   (err) => {
-  //     if (getElement) {
-  //       res.send("Successful request").status(200);
-  //     } else {
-  //       res.send("Unsuccessful request").status(404);
-  //     }
-  //   }
-  // );
 );
 
 //Add POST request with path '/todos/:id/undo
@@ -169,20 +157,25 @@ app.post("/todos/:id/undo", (req, res) => {
 
   const getElement = todos.find((todos) => todos.id === id);
   if (getElement) {
-    getData.completed = false;
-  }
-  fs.writeFile(
-    path.join(__dirname, "models/todos.json"),
-    JSON.stringify(todos),
-    (err) => {
-      if (err) {
-        res.send("Unsuccessful request");
-      } else {
-        res.send("Successful request");
+    getElement.completed = false;
+    console.log(getElement)
+    fs.writeFile(
+      __dirname + todoFilePath,
+      JSON.stringify(todos, null, 2),
+      (err) => {
+        if (err) {
+          throw err;
+        } else {
+          res.send(`User with the id ${id} is now incomplete.`).status(200);
+        }
       }
-    }
-  );
-});
+    );
+  } else {
+    res.status(404).send("Could not fulfil request");
+  }
+  }
+
+);
 
 //Add DELETE request with path '/todos/:id
 app.delete("/todos/:id", (req, res) => {
