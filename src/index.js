@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const { v4: uuidv4 } = require("uuid");
 const todoFilePath = process.env.BASE_JSON_PATH;
 const getData = () =>
-  JSON.parse(fs.readFileSync(path.join(__dirname, todoFilePath)));
+  JSON.parse(fs.readFileSync(path.join(__dirname + todoFilePath)));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use("/content", express.static(path.join(__dirname, "public")));
 
 const statusCode = (goodStatus, badStatus, res) => {
-  fs.readFileSync(path.join(__dirname, todoFilePath)),
+  fs.readFileSync(path.join(__dirname + todoFilePath)),
     JSON.stringify(getData),
     (err) => {
       if (err) {
@@ -84,7 +84,7 @@ app.post("/todos", (req, res) => {
     JSON.stringify(todos),
     (err) => {
       if (todos) {
-        res.status(201).send("New Id Created");
+        res.send("New Id Created").status(201);
       } else {
         res.send("Unsuccessful request").status(400);
       }
@@ -145,13 +145,13 @@ app.post("/todos/:id/complete", (req, res) => {
   }
 
   fs.writeFile(
-    path.join(__dirname, "models/todos.json"),
+    path.join(__dirname,todoFilePath),
     JSON.stringify(todos),
     (err) => {
-      if (err) {
-        res.send("Unsuccessful request");
+      if (getElement) {
+        res.send("Successful request").status(200);
       } else {
-        res.send("Successful request");
+        res.send("Unsuccessful request").status(404);
       }
     }
   );
@@ -181,25 +181,37 @@ app.post("/todos/:id/undo", (req, res) => {
 
 //Add DELETE request with path '/todos/:id
 app.delete("/todos/:id", (req, res) => {
-  res.header("Content-Type", "application/json");
-  const todos = getData();
+  // res.header("Content-Type", "application/json");
+  let todos = getData();
   const id = req.params.id;
 
-  const removeTodo = todos.find((todos) => todos.id === id);
+  const removeTodo = todos.find((todo) => todo.id == id);
+  console.log(removeTodo);
   if (removeTodo) {
-    todos.filter((todos) => todos.id != id);
-  }
-  fs.writeFile(
-    path.join(__dirname, "models/todos.json"),
-    JSON.stringify(todos),
-    (err) => {
+    todos = todos.filter((todo) => todo.id != id);
+    fs.writeFile(__dirname + todoFilePath, JSON.stringify(todos, null, 2), (err) => {
       if (err) {
-        res.send(`User with the id ${id} deleted.`);
-      } else {
-        res.status(404).send("Sorry Unsucessful");
+        throw err;
       }
-    }
-  );
+      else{
+        res.send(`User with the id ${id} deleted.`).status(200);
+      }
+    });
+  } else {
+    res.status(404).send("Could not fulfil request");
+  }
+
+  
+  // fs.writeFile(
+  //   path.join(__dirname, todoFilePath),JSON.stringify(todos),
+  //   (err) => {
+  //     if (removeTodo) {
+  //       res.send(`User with the id ${id} deleted.`).status(200);
+  //     } else {
+  //       res.send("Sorry Unsucessful").status(404);
+  //     }
+  //   }
+  // );
 });
 
 module.exports = app;
