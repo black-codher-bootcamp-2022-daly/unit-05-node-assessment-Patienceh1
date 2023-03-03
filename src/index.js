@@ -110,6 +110,7 @@ app.patch("/todos/:id", (req, res) => {
   if (reqName) {
     todo.name = reqName;
   }
+  console.log(todo);
 
   fs.writeFile(
     path.join(__dirname, "models/todos.json"),
