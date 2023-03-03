@@ -86,15 +86,30 @@ app.post("/todos", (req, res) => {
     todos.push(newTodo);
     todos = JSON.stringify(todos, null, 2);
     fs.writeFile(__dirname + todoFilePath, todos, (err) => {
-      if (err) {
-        throw err;
+      if (!err) {
+        res.status(201).send(`User with the id ${id} created.`);
       } else {
-        res.status(201).send(`User with the id ${id} created.`).end();
+        res.send("Could not fulfil request");
       }
     });
-  } else {
-    res.status(400).send("Could not fulfil request").end();
   }
+  else {
+    res.status(400).end();
+    // }
+    // }
+    // catch (error) {
+    // }
+  //   fs.writeFile(__dirname + todoFilePath, todos, (err) => {
+  //     if (err) {
+  //       throw err;
+  //     } else {
+  //       res.status(201).send(`User with the id ${id} created.`);
+  //     }
+  //   });
+  // } else {
+  //   res.status(400).send("Could not fulfil request").end();
+  // }
+}
 });
 
 //Add PATCH request with path '/todos/:id
