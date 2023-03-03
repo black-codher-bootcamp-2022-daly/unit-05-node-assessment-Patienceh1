@@ -114,12 +114,13 @@ app.patch("/todos/:id", (req, res) => {
   console.log(todo);
 
   fs.writeFile(
-    path.join(__dirname, "models/todos.json"),
-    JSON.stringify(todos),
+    path.join(__dirname + todoFilePath),JSON.stringify(todos, null, 2),
     (err) => {
       if (err) {
-        res.send(`User with the id ${id} has been changed!`);
-      } 
+        throw err
+      } else {
+        res.status(200).send(`User has been amended!`).end();
+      }
     }
   );
 });
