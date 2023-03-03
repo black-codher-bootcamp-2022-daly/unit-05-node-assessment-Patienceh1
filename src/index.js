@@ -61,7 +61,11 @@ app.get("/todos/:id", (req, res) => {
   if (getId) {
     res.send(
       JSON.stringify(
-        getData().find((element) => element.id == req.params.id), null, 2) );
+        getData().find((element) => element.id == req.params.id),
+        null,
+        2
+      )
+    );
   } else {
     res.status(404).send("Sorry Id not found");
   }
@@ -69,37 +73,28 @@ app.get("/todos/:id", (req, res) => {
 
 //Add POST request with path '/todos'
 app.post("/todos", (req, res) => {
-  const todos = getData();
-const { name, due } = req.body;
-const id = uuidv4();
-const dateTime = new Date();
+  let todos = getData();
+  const name = req.body.name;
+  const due = req.body.due;
+  const id = uuidv4();
+  const dateTime = new Date();
 
-if (req.body && new Date(due) != "invalid date") {
-  const newTodo = { id, name,  complete: false,due, created: dateTime,};
-  console.log(newTodo);
-  todos.push(newTodo);
-  fs.writeFile(__dirname + todoFilePath, JSON.stringify(todos, null, 2), (err) => {
-    if (err) {
-      throw err;
-    }
-    else{
-      res.status(201).send(`User with the id ${id} created.`).end();
-    }
-  });
-} else {
-  res.status(400).send("Could not fulfil request").end();
-}
-  
-}
-  // const body = req.body;
-  // todos.push(body);
-  // console.log(todos);
- 
-
-
-
-);
-
+  if (req.body && new Date(due) != "invalid date") {
+    const newTodo = { id, name, complete: false, due, created: dateTime };
+    console.log(newTodo);
+    todos.push(newTodo);
+    todos = JSON.stringify(todos, null, 2);
+    fs.writeFile(__dirname + todoFilePath, todos, (err) => {
+      if (err) {
+        throw err;
+      } else {
+        res.status(201).send(`User with the id ${id} created.`).end();
+      }
+    });
+  } else {
+    res.status(400).send("Could not fulfil request").end();
+  }
+});
 
 //Add PATCH request with path '/todos/:id
 app.patch("/todos/:id", (req, res) => {
@@ -140,7 +135,7 @@ app.post("/todos/:id/complete", (req, res) => {
   }
 
   fs.writeFile(
-    path.join(__dirname,todoFilePath),
+    path.join(__dirname, todoFilePath),
     JSON.stringify(todos),
     (err) => {
       if (getElement) {
@@ -184,18 +179,20 @@ app.delete("/todos/:id", (req, res) => {
   console.log(removeTodo);
   if (removeTodo) {
     todos = todos.filter((todo) => todo.id != id);
-    fs.writeFile(__dirname + todoFilePath, JSON.stringify(todos, null, 2), (err) => {
-      if (err) {
-        throw err;
+    fs.writeFile(
+      __dirname + todoFilePath,
+      JSON.stringify(todos, null, 2),
+      (err) => {
+        if (err) {
+          throw err;
+        } else {
+          res.send(`User with the id ${id} deleted.`).status(200);
+        }
       }
-      else{
-        res.send(`User with the id ${id} deleted.`).status(200);
-      }
-    });
+    );
   } else {
     res.status(404).send("Could not fulfil request");
   }
-
 });
 
 module.exports = app;
