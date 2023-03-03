@@ -70,41 +70,36 @@ app.get("/todos/:id", (req, res) => {
 //Add POST request with path '/todos'
 app.post("/todos", (req, res) => {
   const todos = getData();
-  const body = req.body;
-  todos.push(body);
-  console.log(todos);
-  // if (todos) {
-  //   res.status(201).send("New Id Created");
-  // } else {
-  //   res.status(404).send("Sorry Id not found");
-  // }
+const { name, due } = req.body;
+const id = uuidv4();
+const dateTime = new Date();
 
-  fs.writeFile(
-    path.join(__dirname, "models/todos.json"),
-    JSON.stringify(todos),
-    (err) => {
-      if (todos) {
-        res.send("New Id Created").status(201);
-      } else {
-        res.send("Unsuccessful request").status(400);
-      }
-})}
+if (req.body && new Date(due) != "invalid date") {
+  const newTodo = { id, name,  complete: false,due, created: dateTime,};
+  console.log(newTodo);
+  todos.push(newTodo);
+  fs.writeFile(__dirname + todoFilePath, JSON.stringify(todos, null, 2), (err) => {
+    if (err) {
+      throw err;
+    }
+    else{
+      res.send(`User with the id ${id} created.`).status(201);
+    }
+  });
+} else {
+  res.status(400).send("Could not fulfil request");
+}
+  
+}
+  // const body = req.body;
+  // todos.push(body);
+  // console.log(todos);
+ 
+
+
+
 );
 
-// const { name, due } = req.body;
-// const id = uuidv4();
-// const dateTime = new Date();
-
-// if (req.body && new Date(due) != "invalid date") {
-//   const newTodo = { id, name, created: dateTime, due, complete: false };
-//   console.log(newTodo);
-
-//   todos.push(newTodo);
-// }
-
-//  res.status(201).json(newTodo);
-// log(req.method, todos);
-//  statusCode(res, 404, 201);
 
 //Add PATCH request with path '/todos/:id
 app.patch("/todos/:id", (req, res) => {
@@ -201,17 +196,6 @@ app.delete("/todos/:id", (req, res) => {
     res.status(404).send("Could not fulfil request");
   }
 
-  
-  // fs.writeFile(
-  //   path.join(__dirname, todoFilePath),JSON.stringify(todos),
-  //   (err) => {
-  //     if (removeTodo) {
-  //       res.send(`User with the id ${id} deleted.`).status(200);
-  //     } else {
-  //       res.send("Sorry Unsucessful").status(404);
-  //     }
-  //   }
-  // );
 });
 
 module.exports = app;
