@@ -8,6 +8,7 @@ const { v4: uuidv4 } = require("uuid");
 const todoFilePath = process.env.BASE_JSON_PATH;
 const getData = () =>
   JSON.parse(fs.readFileSync(path.join(__dirname + todoFilePath)));
+  // console.log(getData());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -117,10 +118,8 @@ app.patch("/todos/:id", (req, res) => {
     JSON.stringify(todos),
     (err) => {
       if (err) {
-        res.send("Unsuccessful request");
-      } else {
-        res.send("Successful request");
-      }
+        res.send(`User with the id ${id} has been changed!`);
+      } 
     }
   );
 });
