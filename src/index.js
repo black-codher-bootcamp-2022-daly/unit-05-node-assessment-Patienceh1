@@ -83,11 +83,11 @@ if (req.body && new Date(due) != "invalid date") {
       throw err;
     }
     else{
-      res.send(`User with the id ${id} created.`).status(201);
+      res.status(201).send(`User with the id ${id} created.`).end();
     }
   });
 } else {
-  res.status(400).send("Could not fulfil request");
+  res.status(400).send("Could not fulfil request").end();
 }
   
 }
