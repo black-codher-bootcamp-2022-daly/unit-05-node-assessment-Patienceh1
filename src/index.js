@@ -58,8 +58,10 @@ app.get("/todos/completed", (req, res) => {
 
 app.get("/todos/:id", (req, res) => {
   const getId = getData().find((element) => element.id === req.params.id);
-    if (getId) {
-      res.send().status(200);
+  if (getId) {
+    res.send(
+      JSON.stringify(
+        getData().find((element) => element.id == req.params.id), null, 2) );
   } else {
     res.status(404).send("Sorry Id not found");
   }
@@ -71,34 +73,38 @@ app.post("/todos", (req, res) => {
   const body = req.body;
   todos.push(body);
   console.log(todos);
+  // if (todos) {
+  //   res.status(201).send("New Id Created");
+  // } else {
+  //   res.status(404).send("Sorry Id not found");
+  // }
 
   fs.writeFile(
     path.join(__dirname, "models/todos.json"),
     JSON.stringify(todos),
     (err) => {
-      if (err) {
-        res.send("Successful request").status(201);
+      if (todos) {
+        res.status(201).send("New Id Created");
       } else {
         res.send("Unsuccessful request").status(400);
       }
-    }
-  );
+})}
+);
 
-  // const { name, due } = req.body;
-  // const id = uuidv4();
-  // const dateTime = new Date();
+// const { name, due } = req.body;
+// const id = uuidv4();
+// const dateTime = new Date();
 
-  // if (req.body && new Date(due) != "invalid date") {
-  //   const newTodo = { id, name, created: dateTime, due, complete: false };
-  //   console.log(newTodo);
+// if (req.body && new Date(due) != "invalid date") {
+//   const newTodo = { id, name, created: dateTime, due, complete: false };
+//   console.log(newTodo);
 
-  //   todos.push(newTodo);
-  // }
+//   todos.push(newTodo);
+// }
 
-  //  res.status(201).json(newTodo);
-  // log(req.method, todos);
-  //  statusCode(res, 404, 201);
-});
+//  res.status(201).json(newTodo);
+// log(req.method, todos);
+//  statusCode(res, 404, 201);
 
 //Add PATCH request with path '/todos/:id
 app.patch("/todos/:id", (req, res) => {
