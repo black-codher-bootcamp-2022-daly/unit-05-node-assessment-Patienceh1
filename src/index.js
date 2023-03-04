@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require("uuid");
 const todoFilePath = process.env.BASE_JSON_PATH;
 const getData = () =>
   JSON.parse(fs.readFileSync(path.join(__dirname + todoFilePath)));
-// console.log(getData());
+
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -35,7 +35,6 @@ app.get("/", (_, res) => {
 app.get("/todos", (_, res) => {
   res.header("Content-Type", "application/json");
   res.sendFile(todoFilePath, { root: __dirname });
-  // res.status(501).end();
 });
 
 //Add GET request with path '/todos/overdue'
@@ -177,7 +176,6 @@ app.post("/todos/:id/undo", (req, res) => {
 
 //Add DELETE request with path '/todos/:id
 app.delete("/todos/:id", (req, res) => {
-  // res.header("Content-Type", "application/json");
   let todos = getData();
   const id = req.params.id;
 
