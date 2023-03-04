@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require("uuid");
 const todoFilePath = process.env.BASE_JSON_PATH;
 const getData = () =>
   JSON.parse(fs.readFileSync(path.join(__dirname + todoFilePath)));
-  // console.log(getData());
+// console.log(getData());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -81,20 +81,35 @@ app.post("/todos", (req, res) => {
   const dateTime = new Date();
 
   if (req.body && new Date(due) != "invalid date") {
-    const newTodo = { id, name, complete: false, due, created: dateTime };
+    const newTodo = { id, name, completed: false, due, created: dateTime };
     console.log(newTodo);
     todos.push(newTodo);
     todos = JSON.stringify(todos, null, 2);
     fs.writeFile(__dirname + todoFilePath, todos, (err) => {
-      if (err) {
-        throw err;
+      if (!err) {
+        res.status(201).send(`User with the id ${id} created.`);
       } else {
-        res.status(201).send(`User with the id ${id} created.`).end();
+        res.send("Could not fulfil request");
       }
     });
-  } else {
-    res.status(400).send("Could not fulfil request").end();
   }
+  else {
+    res.status(400).end();
+    // }
+    // }
+    // catch (error) {
+    // }
+  //   fs.writeFile(__dirname + todoFilePath, todos, (err) => {
+  //     if (err) {
+  //       throw err;
+  //     } else {
+  //       res.status(201).send(`User with the id ${id} created.`);
+  //     }
+  //   });
+  // } else {
+  //   res.status(400).send("Could not fulfil request").end();
+  // }
+}
 });
 
 //Add PATCH request with path '/todos/:id
@@ -114,10 +129,11 @@ app.patch("/todos/:id", (req, res) => {
   console.log(todo);
 
   fs.writeFile(
-    path.join(__dirname + todoFilePath),JSON.stringify(todos, null, 2),
+    path.join(__dirname + todoFilePath),
+    JSON.stringify(todos, null, 2),
     (err) => {
       if (err) {
-        throw err
+        throw err;
       } else {
         res.status(200).send(`User has been amended!`).end();
       }
@@ -148,8 +164,7 @@ app.post("/todos/:id/complete", (req, res) => {
   } else {
     res.status(404).send("Could not fulfil request");
   }
-  }
-);
+});
 
 //Add POST request with path '/todos/:id/undo
 app.post("/todos/:id/undo", (req, res) => {
@@ -159,7 +174,7 @@ app.post("/todos/:id/undo", (req, res) => {
   const getElement = todos.find((todos) => todos.id === id);
   if (getElement) {
     getElement.completed = false;
-    console.log(getElement)
+    console.log(getElement);
     fs.writeFile(
       __dirname + todoFilePath,
       JSON.stringify(todos, null, 2),
@@ -174,9 +189,7 @@ app.post("/todos/:id/undo", (req, res) => {
   } else {
     res.status(404).send("Could not fulfil request");
   }
-  }
-
-);
+});
 
 //Add DELETE request with path '/todos/:id
 app.delete("/todos/:id", (req, res) => {
