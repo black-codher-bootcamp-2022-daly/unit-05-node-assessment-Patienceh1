@@ -123,6 +123,7 @@ app.post("/todos/:id/complete", (req, res) => {
   if (getElement) {
     getElement.completed = true;
     console.log(getElement);
+    
     fs.writeFile(
       __dirname + todoFilePath,
       JSON.stringify(todos, null, 2),
