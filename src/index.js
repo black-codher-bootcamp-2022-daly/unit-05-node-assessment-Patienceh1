@@ -16,17 +16,7 @@ app.use(express.raw());
 app.use(bodyParser.json());
 app.use("/content", express.static(path.join(__dirname, "public")));
 
-const statusCode = (goodStatus, badStatus, res) => {
-  fs.readFileSync(path.join(__dirname + todoFilePath)),
-    JSON.stringify(getData),
-    (err) => {
-      if (err) {
-        res.status(badStatus).send("Sorry cannot find data");
-      } else {
-        res.status(goodStatus).send("Data has been found");
-      }
-    };
-};
+
 
 app.get("/", (_, res) => {
   res.sendFile("./public/index.html", { root: __dirname });
