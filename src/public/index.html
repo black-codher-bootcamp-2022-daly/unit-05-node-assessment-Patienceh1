@@ -1,9 +1,173 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <title>Todo List API</title>
+    <title>Patience's Todo List API</title>
+    <link rel="icon" type="image/x-icon" href="/content/images/favicon.ico" />
+    <link rel="stylesheet" href="/content/styles.css" />
   </head>
   <body>
-    <h1>Todo List API</h1>
-    <p>....</p>
+    <img src="/content/images/logo.png" alt="logo" />
+    <h1>Welcome to Patience's Todo List API</h1>
+    <table id="myTable" width="1200" height="100" border="1">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>URL</th>
+          <th>Description</th>
+          <th>Example URL</th>
+          <th>Request Body</th>
+          <th>Status Code</th>
+          <th>Response Body</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>"/"</code></td>
+          <td>
+            Returns a static HTML file index.html containing a favicon.ico,
+            logo.png and reference to an external stylesheet styles.css.
+          </td>
+          <td><code>http://localhost:8080/</code></td>
+          <td></td>
+          <td>200</td>
+          <td>HTML page</td>
+        </tr>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>/todos</code></td>
+          <td>Return all todos from the todos.json file</td>
+          <td><code>http://localhost:8080/todos</code></td>
+          <td></td>
+          <td>200</td>
+          <td>
+            <code>
+              200[{"id":"01507581-9d12-4c3a-bb60-19d539a11189","name":"Learn to
+              use Adobe
+              Photoshop","created":"2021-11-20T18:25:43.511Z","due":"2021-12-23T23:05:03.352Z","completed":false},
+              {...}, {...} ]
+            </code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>/todos/:id</code></td>
+          <td>Return a specific todo with the corresponding id</td>
+          <td>
+            <code
+              >http://localhost:8080/todos/01507581-9d12-4c3a-bb60-19d539a11189</code
+            >
+          </td>
+          <td></td>
+          <td>200 or 404 if id not found</td>
+          <td>
+            <code
+              >{"id":"01507581-9d12-4c3a-bb60-19d539a11189","name":"Learn to use
+              Adobe
+              Photoshop","created":"2021-11-20T18:25:43.511Z","due":"2021-12-23T23:05:03.352Z","completed":false}</code
+            >
+          </td>
+        </tr>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>/todos/overdue</code></td>
+          <td>
+            Return a list of overdue todos or an empty list if there are no
+            overdue todos. Todos can be filtered based on their due date
+            attribute
+          </td>
+          <td><code>http://localhost:8080/todos/overdue</code></td>
+          <td></td>
+          <td>200</td>
+          <td><code>[] or [{todo1},{todo2},{...}]</code></td>
+        </tr>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>/todos/completed</code></td>
+          <td>
+            Return a list of completed todos or an empty list, if no todos have
+            been completed. Todos can be filtered based on their due date
+            attribute.
+          </td>
+          <td><code>http://localhost:8080/todos/completed</code></td>
+          <td></td>
+          <td>200</td>
+          <td><code>[] or [{todo1},{todo2},{...}]</code></td>
+        </tr>
+        <tr>
+          <td><code>POST*</code></td>
+          <td><code>/todos</code></td>
+          <td>Add a new todo to the todo list</td>
+          <td><code>http://localhost:8080/todos</code></td>
+          <td>
+            <code
+              >{'name' : 'Buy oatmilk x 2',
+              'due':'2021-11-20T18:25:43.511Z'}</code
+            >
+          </td>
+          <td>201 (Created), 400 (Bad Request) if incorrect data submitted</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><code>PATCH*</code></td>
+          <td><code>/todos/:id</code></td>
+          <td>Edit the name and/or due date attributes of a todo.</td>
+          <td>
+            <code
+              >http://localhost:8080/todos/:9d127581-0150-4c3a-bb60-1118919d539a</code
+            >
+          </td>
+          <td>
+            <code
+              >{"name":"Buy 3 Cartons of Oat
+              Milk","due":"2021-12-23T18:25:43.511Z"}</code
+            >
+          </td>
+          <td>
+            200 (OK) or 404 (Not Found) if invalid id or request attributes
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><code>POST*</code></td>
+          <td><code>/todos/:id/complete</code></td>
+          <td>Update todo, set attribute complete to true</td>
+          <td>
+            <code
+              >http://localhost:8080/todos/01507581-9d12-4c3a-bb60-19d539a11189/complete</code
+            >
+          </td>
+          <td></td>
+          <td>200 (OK) or 404 (Not Found) if invalid id</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><code>POST*</code></td>
+          <td><code>/todos/:id/undo</code></td>
+          <td>Update todo, set attribute complete to false</td>
+          <td>
+            <code
+              >http://localhost:8080/todos/01507581-9d12-4c3a-bb60-19d539a11189/undo</code
+            >
+          </td>
+          <td></td>
+          <td>200 (OK) or 404 (Not Found) if invalid id</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><code>DELETE*</code></td>
+          <td><code>todos/:id</code></td>
+          <td>Deletes a todo by id</td>
+          <td>
+            <code
+              >http://localhost:8080/todos/01507581-9d12-4c3a-bb60-19d539a11189</code
+            >
+          </td>
+          <td></td>
+          <td>200 (OK) or 404 (Not Found) if invalid id</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
   </body>
 </html>
