@@ -94,23 +94,6 @@ app.post("/todos", (req, res) => {
         res.status(201).send(`User with the id ${id} created.`);
       }
     });
-  // }
-  // else {
-  //   res.status(201).send(`User with the id ${id} created.`);
-  //   // }
-    // }
-    // catch (error) {
-    // }
-  //   fs.writeFile(__dirname + todoFilePath, todos, (err) => {
-  //     if (err) {
-  //       throw err;
-  //     } else {
-  //       res.status(201).send(`User with the id ${id} created.`);
-  //     }
-  //   });
-  // } else {
-  //   res.status(400).send("Could not fulfil request").end();
-  // }
 }
 });
 
