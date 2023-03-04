@@ -44,8 +44,8 @@ app.get("/todos/completed", (req, res) => {
   res.send(todos);
 });
 
-//Add GET request with path '/todos/:id
 
+//Add GET request with path '/todos/:id
 app.get("/todos/:id", (req, res) => {
   const getId = getData().find((element) => element.id === req.params.id);
   if (getId) {
