@@ -1,3 +1,11 @@
 body {
-    background-color: aqua;
+  background-color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+#myTable {
+    align-content: center;
+    border: 2px solid rgb(252, 211, 4);
 }
