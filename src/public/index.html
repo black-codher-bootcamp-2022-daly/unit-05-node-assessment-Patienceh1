@@ -112,16 +112,31 @@
           <td><code>PATCH*</code></td>
           <td><code>/todos/:id</code></td>
           <td>Edit the name and/or due date attributes of a todo.</td>
-          <td><code>http://localhost:8080/todos/:9d127581-0150-4c3a-bb60-1118919d539a</code></td>
-          <td><code>{"name":"Buy 3 Cartons of Oat Milk","due":"2021-12-23T18:25:43.511Z"}</code></td>
-          <td>200 (OK) or 404 (Not Found) if invalid id or request attributes</td>
+          <td>
+            <code
+              >http://localhost:8080/todos/:9d127581-0150-4c3a-bb60-1118919d539a</code
+            >
+          </td>
+          <td>
+            <code
+              >{"name":"Buy 3 Cartons of Oat
+              Milk","due":"2021-12-23T18:25:43.511Z"}</code
+            >
+          </td>
+          <td>
+            200 (OK) or 404 (Not Found) if invalid id or request attributes
+          </td>
           <td></td>
         </tr>
         <tr>
           <td><code>POST*</code></td>
           <td><code>/todos/:id/complete</code></td>
-          <td>	Update todo, set attribute complete to true</td>
-          <td><code>http://localhost:8080/todos/01507581-9d12-4c3a-bb60-19d539a11189/complete</code></td>
+          <td>Update todo, set attribute complete to true</td>
+          <td>
+            <code
+              >http://localhost:8080/todos/01507581-9d12-4c3a-bb60-19d539a11189/complete</code
+            >
+          </td>
           <td></td>
           <td>200 (OK) or 404 (Not Found) if invalid id</td>
           <td></td>
@@ -130,7 +145,11 @@
           <td><code>POST*</code></td>
           <td><code>/todos/:id/undo</code></td>
           <td>Update todo, set attribute complete to false</td>
-          <td><code>http://localhost:8080/todos/01507581-9d12-4c3a-bb60-19d539a11189/undo</code></td>
+          <td>
+            <code
+              >http://localhost:8080/todos/01507581-9d12-4c3a-bb60-19d539a11189/undo</code
+            >
+          </td>
           <td></td>
           <td>200 (OK) or 404 (Not Found) if invalid id</td>
           <td></td>
@@ -139,9 +158,13 @@
           <td><code>DELETE*</code></td>
           <td><code>todos/:id</code></td>
           <td>Deletes a todo by id</td>
-          <td><code>http://localhost:8080/todos/01507581-9d12-4c3a-bb60-19d539a11189</code></td>
+          <td>
+            <code
+              >http://localhost:8080/todos/01507581-9d12-4c3a-bb60-19d539a11189</code
+            >
+          </td>
           <td></td>
-          <td>200 (OK) or 404 (Not Found) if invalid id	</td>
+          <td>200 (OK) or 404 (Not Found) if invalid id</td>
           <td></td>
         </tr>
       </tbody>

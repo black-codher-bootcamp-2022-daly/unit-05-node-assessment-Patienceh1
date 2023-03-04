@@ -85,16 +85,15 @@ app.post("/todos", (req, res) => {
     console.log(newTodo);
     todos.push(newTodo);
     todos = JSON.stringify(todos, null, 2);
-    
+
     fs.writeFile(__dirname + todoFilePath, todos, (err) => {
       if (name == null || due == null) {
         res.status(400).end();
-      } 
-      else {
+      } else {
         res.status(201).send(`User with the id ${id} created.`);
       }
     });
-}
+  }
 });
 
 //Add PATCH request with path '/todos/:id
